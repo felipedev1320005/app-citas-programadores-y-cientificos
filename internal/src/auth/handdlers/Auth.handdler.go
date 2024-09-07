@@ -44,7 +44,7 @@ func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Registrar el nuevo usuario
-	newUser, err := a.AuthService.Register(userBody)
+	TokenUser, err := a.AuthService.Register(userBody)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(err.Error())
@@ -52,5 +52,5 @@ func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newUser)
+	json.NewEncoder(w).Encode(TokenUser)
 }
