@@ -13,10 +13,11 @@ import (
 type authHandler struct {
 	AuthService ports.AuthService   // Servicio para manejar la lógica de autenticación
 	Validator   *validator.Validate // Validador para verificar los datos de entrada
+	UserService ports.UserService   // Adaptador para el servicio de usuarios
 }
 
 // NewAuthHandler crea una nueva instancia de AuthHandler.
-func NewAuthHandler(authService ports.AuthService) (*authHandler, error) {
+func NewAuthHandler(authService ports.AuthService, userService ports.UserService) (*authHandler, error) {
 	return &authHandler{
 		AuthService: authService,
 		Validator:   validator.New(), // Inicializa el validador

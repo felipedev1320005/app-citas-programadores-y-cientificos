@@ -5,6 +5,8 @@ import (
 	"go-rest/internal/src/auth/repo"
 	"go-rest/internal/src/auth/services"
 
+	UserAdapter "go-rest/internal/src/users/adapters"
+
 	"github.com/gorilla/mux"
 )
 
@@ -16,7 +18,8 @@ func NewRouter() *mux.Router {
 	AuthService := services.AuthService{
 		AuthRepo: &AuthRepo,
 	}
-	AuthHandler, errhand := handdlers.NewAuthHandler(&AuthService)
+	UserAdapter := UserAdapter.NewAuthAdapter()
+	AuthHandler, errhand := handdlers.NewAuthHandler(&AuthService, UserAdapter)
 	if errhand != nil {
 		panic(errhand)
 	}
