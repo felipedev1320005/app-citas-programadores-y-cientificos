@@ -10,6 +10,9 @@ import (
 
 type UserRepository struct{}
 
+func NewUserRepository() *UserRepository {
+	return &UserRepository{}
+}
 func (u *UserRepository) CreateUser(user domain.UserCreateDTO) (domain.User, error) {
 	// Encriptar la contraseña
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -40,4 +43,13 @@ func (u *UserRepository) GetUsers() ([]domain.User, error) {
 		return []domain.User{}, err
 	}
 	return users, nil
+}
+func (u *UserRepository) GetUserByEmail(email string) (domain.User, error) {
+	var user domain.User
+	getUser := posgress.Db.Where("email = ?", email).First(&user)
+	err := getUser.Error
+	if err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
 }
