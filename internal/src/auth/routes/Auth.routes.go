@@ -2,7 +2,6 @@ package routes
 
 import (
 	"go-rest/internal/src/auth/handdlers"
-	"go-rest/internal/src/auth/repo"
 	"go-rest/internal/src/auth/services"
 
 	UserAdapter "go-rest/internal/src/users/adapters"
@@ -14,10 +13,7 @@ func NewRouter() *mux.Router {
 	r := mux.NewRouter()
 
 	// Inicializar repositorio, servicio y handler
-	AuthRepo := repo.AuthRepository{}
-	AuthService := services.AuthService{
-		AuthRepo: &AuthRepo,
-	}
+	AuthService := services.AuthService{}
 	UserAdapter := UserAdapter.NewAuthAdapter()
 	AuthHandler, errhand := handdlers.NewAuthHandler(&AuthService, UserAdapter)
 	if errhand != nil {
