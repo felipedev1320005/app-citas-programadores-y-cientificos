@@ -46,3 +46,10 @@ func (u *UserService) ComparePasswords(hashedPassword string, password string) e
 	}
 	return nil
 }
+func (u *UserService) DeleteUserByID(id string) error {
+	err := u.UserRepo.DeleteUserByID(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
