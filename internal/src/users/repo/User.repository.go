@@ -4,39 +4,34 @@ package repo
 import (
 	"go-rest/internal/src/shared/repositoryConection/posgress"
 	"go-rest/internal/src/users/domain"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-type UserRepository struct {
-}
-
-// func (u *UserRepository) CreateUser(user domain.UserCreateDTO) (domain.User, error) {
-// 	newUser, err := u.UserService.CreateUser(user)
-// 	if err != nil {
-// 		return domain.User{}, err
-// 	}
-// 	return newUser, nil
-// }
-// func (u *UserRepository) GetUsers() ([]domain.User, error) {
-// 	user, err := u.UserService.GetUsers()
-// 	if err != nil {
-// 		return []domain.User{}, err
-// 	}
-// 	return user, nil
-// }
+type UserRepository struct{}
 
 func (u *UserRepository) CreateUser(user domain.UserCreateDTO) (domain.User, error) {
+	// Encriptar la contraseña
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return domain.User{}, err
+	}
+
 	newUser := domain.User{
 		Name:     user.Name,
 		Email:    user.Email,
-		Password: user.Password,
+		Password: string(hashedPassword), // Guardar la contraseña encriptada
 	}
+
+	// Guardar el nuevo usuario en la base de datos
 	createUser := posgress.Db.Create(&newUser)
-	err := createUser.Error
+	err = createUser.Error
 	if err != nil {
 		return domain.User{}, err
 	}
 	return newUser, nil
 }
+
 func (u *UserRepository) GetUsers() ([]domain.User, error) {
 	var users []domain.User
 	getUsers := posgress.Db.Find(&users)
