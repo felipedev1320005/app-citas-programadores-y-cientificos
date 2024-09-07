@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	repositoryconection "go-rest/internal/src/shared/repositoryConection"
-	PosgresRepo "go-rest/internal/src/shared/repositoryConection/posgress"
-	"go-rest/internal/src/users/handdlers"
+	postgresRepo "go-rest/internal/src/shared/repositoryConection/posgress"
+	handlers "go-rest/internal/src/users/handdlers" // Corregido aquí
 	"go-rest/internal/src/users/repo"
 	"go-rest/internal/src/users/services"
 
@@ -16,14 +16,19 @@ import (
 )
 
 func main() {
-	postgres := PosgresRepo.PosgressRepositoryConection{}
+	// Inicializa la conexión con la base de datos
+	postgres := postgresRepo.PosgressRepositoryConection{}
 	dbConection := repositoryconection.RepositoryConection{RepositoryConection: &postgres}
 	dbConection.Conection()
+
 	// Crear el router de Gorilla Mux
 	r := mux.NewRouter()
+
+	// Inicializar servicios, repositorios y handlers
 	UserRepo := repo.UserRepository{}
 	UserServices := services.UserService{UserRepo: &UserRepo}
-	UserHandler := handdlers.UserHandler{UserService: &UserServices}
+	UserHandler := handlers.NewUserHandler(&UserServices) // Utiliza el constructor para crear el UserHandler
+
 	// Definir las rutas
 	r.HandleFunc("/", HomeHandler).Methods("GET")
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
