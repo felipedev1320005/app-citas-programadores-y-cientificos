@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 
+	AuthHandlers "go-rest/internal/src/auth/handdlers" // Corregido aquí
+	AuthRepo "go-rest/internal/src/auth/repo"          // Corregido aquí
+	AuthServices "go-rest/internal/src/auth/services"  // Corregido aquí
 	repositoryconection "go-rest/internal/src/shared/repositoryConection"
 	postgresRepo "go-rest/internal/src/shared/repositoryConection/posgress"
 	handlers "go-rest/internal/src/users/handdlers" // Corregido aquí
@@ -29,11 +32,16 @@ func main() {
 	UserServices := services.UserService{UserRepo: &UserRepo}
 	UserHandler := handlers.NewUserHandler(&UserServices) // Utiliza el constructor para crear el UserHandler
 
+	// Inicializar servicios, repositorios y handlers de autenticación
+	AuthRepo := AuthRepo.AuthRepository{}                        // Crear una instancia de AuthRepository
+	AuthService := AuthServices.AuthService{AuthRepo: &AuthRepo} // Crear una instancia de AuthService
+	AuthHandler := AuthHandlers.NewAuthHandler(&AuthService)     // Crear una instancia de AuthHandler
 	// Definir las rutas
 	r.HandleFunc("/", HomeHandler).Methods("GET")
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
 	r.HandleFunc("/users", UserHandler.CreateUser).Methods("POST")
-
+	//  register
+	r.HandleFunc("/auth/register", AuthHandler.Register).Methods("POST") // Agregar la ruta de registro de usuario
 	// Iniciar el servidor
 	log.Println("Servidor corriendo en el puerto 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
