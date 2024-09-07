@@ -62,3 +62,17 @@ func (u *userHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(users)
 }
+func (u *userHandler) DeleteUserByID(w http.ResponseWriter, r *http.Request) {
+	// Obtiene el id de la URL
+	id := r.URL.Query().Get("id")
+
+	err := u.UserService.DeleteUserByID(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("User deleted successfully")
+}
