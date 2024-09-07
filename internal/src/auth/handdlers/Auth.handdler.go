@@ -16,11 +16,11 @@ type AuthHandler struct {
 }
 
 // NewAuthHandler crea una nueva instancia de AuthHandler.
-func NewAuthHandler(authService ports.AuthService) *AuthHandler {
+func NewAuthHandler(authService ports.AuthService) (*AuthHandler, error) {
 	return &AuthHandler{
 		AuthService: authService,
 		Validator:   validator.New(), // Inicializa el validador
-	}
+	}, nil
 }
 
 // Register maneja las solicitudes de registro de nuevos usuarios.
@@ -28,6 +28,36 @@ func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var userBody dtos.AuthRegisterDOT
 
 	// Decodificar el cuerpo de la solicitud JSON en la estructura AuthRegisterDOT
+	err := json.NewDecoder(r.Body).Decode(&userBody)
+	if err != nil {
+		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
+		return
+	}
+
+	// Validar los datos del usuario
+	err = a.Validator.Struct(userBody)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Registrar el nuevo usuario y generar un JWT
+	token, err := a.AuthService.Register(userBody)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Enviar el JWT como respuesta
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{"token": token})
+}
+
+// Login maneja las solicitudes de inicio de sesión de los usuarios.
+func (a *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+	var userBody dtos.AuthLoginDOT
+
+	// Decodificar el cuerpo de la solicitud JSON en la estructura AuthLoginDOT
 	err := json.NewDecoder(r.Body).Decode(&userBody)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -43,14 +73,14 @@ func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Registrar el nuevo usuario
-	TokenUser, err := a.AuthService.Register(userBody)
+	// Iniciar sesión del usuario y generar un JWT
+	token, err := a.AuthService.Login(userBody)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(err.Error())
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(TokenUser)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"token": token}) // Enviar el JWT como respuesta
 }

@@ -14,7 +14,7 @@ func NewRouter() *mux.Router {
 	// Inicializar repositorio, servicio y handler
 	UserRepo := repo.UserRepository{}
 	UserServices := services.UserService{UserRepo: &UserRepo}
-	UserHandler := handlers.UserHandler{UserService: &UserServices}
+	UserHandler := handlers.NewUserHandler(&UserServices)
 
 	// Definir rutas
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
