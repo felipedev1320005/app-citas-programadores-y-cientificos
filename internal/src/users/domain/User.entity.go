@@ -1,3 +1,4 @@
+// /internal/src/users/domain/User.entity.go
 package domain
 
 import (
