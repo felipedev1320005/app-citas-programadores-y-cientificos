@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/mux"
 )
 
 type userHandler struct {
@@ -64,7 +65,7 @@ func (u *userHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 func (u *userHandler) DeleteUserByID(w http.ResponseWriter, r *http.Request) {
 	// Obtiene el id de la URL
-	id := r.URL.Query().Get("id")
+	id := mux.Vars(r)["id"]
 
 	err := u.UserService.DeleteUserByID(id)
 	if err != nil {
