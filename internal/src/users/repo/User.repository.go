@@ -53,3 +53,11 @@ func (u *UserRepository) GetUserByEmail(email string) (domain.User, error) {
 	}
 	return user, nil
 }
+func (u *UserRepository) DeleteUserByID(id string) error {
+	deleteUser := posgress.Db.Where("id = ?", id).Delete(&domain.User{})
+	err := deleteUser.Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

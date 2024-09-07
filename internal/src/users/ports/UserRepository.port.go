@@ -7,6 +7,7 @@ type UserRepository interface {
 	CreateUser(user domain.UserCreateDTO) (domain.User, error)
 	GetUsers() ([]domain.User, error)
 	GetUserByEmail(email string) (domain.User, error)
+	DeleteUserByID(id string) error
 	// GetUser(id string) (domain.User, error)
 	// UpdateUser(id string, user domain.UserUpdateDTO) (domain.User, error)
 	// DeleteUser(id string) error
