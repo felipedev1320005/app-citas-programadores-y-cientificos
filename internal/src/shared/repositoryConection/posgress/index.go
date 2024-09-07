@@ -3,7 +3,7 @@ package posgress
 
 import (
 	"fmt"
-	UserDomain "go-rest/internal/src/users/domain"
+	"go-rest/internal/src/users/domain"
 	"log"
 	"os"
 
@@ -26,5 +26,5 @@ func (p *PosgressRepositoryConection) Conection() {
 		log.Fatalf("Error al conectar con la base de datos: %v", err)
 	}
 	log.Println("Auto migración de la base de datos")
-	Db.AutoMigrate(&UserDomain.User{})
+	Db.AutoMigrate(&domain.User{}, &domain.Profile{}, &domain.Preferences{})
 }
