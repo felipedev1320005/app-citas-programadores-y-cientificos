@@ -1,3 +1,4 @@
+// /internal/src/shared/repositoryConection/posgress/index.go
 package posgress
 
 import (

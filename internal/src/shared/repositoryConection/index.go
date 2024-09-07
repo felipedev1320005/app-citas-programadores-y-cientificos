@@ -1,3 +1,4 @@
+// /internal/src/shared/repositoryConection/index.go
 package repositoryconection
 
 type repositoryConection interface {
