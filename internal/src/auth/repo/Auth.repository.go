@@ -33,3 +33,20 @@ func (a *AuthRepository) Register(user dtos.AuthRegisterDOT) (UserEntity.User, e
 	}
 	return newUser, nil
 }
+func (a *AuthRepository) Login(user dtos.AuthLoginDOT) (UserEntity.User, error) {
+	// Buscar el usuario por su correo electrónico
+	var existingUser UserEntity.User
+	getUser := posgress.Db.Where("email = ?", user.Email).First(&existingUser)
+	err := getUser.Error
+	if err != nil {
+		return UserEntity.User{}, err
+	}
+
+	// Comparar la contraseña ingresada con la contraseña almacenada
+	err = bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(user.Password))
+	if err != nil {
+		return UserEntity.User{}, err
+	}
+
+	return existingUser, nil
+}

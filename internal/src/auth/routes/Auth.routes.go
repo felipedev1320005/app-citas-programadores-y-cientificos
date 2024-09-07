@@ -14,7 +14,7 @@ func NewRouter() *mux.Router {
 	// Inicializar repositorio, servicio y handler
 	AuthRepo := repo.AuthRepository{}
 	AuthService := services.AuthService{AuthRepo: &AuthRepo}
-	AuthHandler := handdlers.NewAuthHandler(&AuthService)
+	AuthHandler := handdlers.AuthHandler{AuthService: &AuthService}
 
 	// Definir rutas
 	r.HandleFunc("/auth/register", AuthHandler.Register).Methods("POST")

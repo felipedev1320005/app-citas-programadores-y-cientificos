@@ -10,5 +10,5 @@ import (
 // En este momento solo tiene un método para registrar usuarios.
 type AuthRepository interface {
 	Register(user dtos.AuthRegisterDOT) (UserEntity.User, error)
-	// Login(user dtos.AuthLoginDOT) (UserEntity.User, error) // Puedes agregar este método cuando implementes login
+	Login(user dtos.AuthLoginDOT) (UserEntity.User, error) // Puedes agregar este método cuando implementes login
 }

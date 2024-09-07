@@ -28,6 +28,19 @@ func (a *AuthService) Register(user dtos.AuthRegisterDOT) (string, error) {
 
 	return token, nil
 }
+func (a *AuthService) Login(user dtos.AuthLoginDOT) (string, error) {
+	existingUser, err := a.AuthRepo.Login(user)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := generateToken(existingUser)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
 
 func generateToken(user UserEntity.User) (string, error) {
 	claims := jwt.MapClaims{
