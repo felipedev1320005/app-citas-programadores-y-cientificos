@@ -1,0 +1,24 @@
+# Usa la imagen oficial de Go para producción
+FROM golang:1.23.0-alpine
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Instala las dependencias necesarias
+RUN apk add --no-cache git
+
+# Copia los archivos necesarios para descargar dependencias
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copia todo el código fuente
+COPY . .
+
+# Compila la aplicación Go en un binario
+RUN go build -o main ./cmd/api
+
+# Expone el puerto de la API
+EXPOSE 8080
+
+# Comando para ejecutar el binario
+CMD ["./main"]
