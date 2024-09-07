@@ -28,3 +28,10 @@ func (a *authAdapter) GetUserByEmail(email string) (domain.User, error) {
 	}
 	return user, nil
 }
+func (a *authAdapter) ComparePasswords(hashedPassword string, password string) error {
+	err := a.userService.ComparePasswords(hashedPassword, password)
+	if err != nil {
+		return err
+	}
+	return nil
+}
