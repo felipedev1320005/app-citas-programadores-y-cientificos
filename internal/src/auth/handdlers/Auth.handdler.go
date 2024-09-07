@@ -10,21 +10,21 @@ import (
 	"github.com/go-playground/validator/v10" // Paquete para validación de datos
 )
 
-type AuthHandler struct {
+type authHandler struct {
 	AuthService ports.AuthService   // Servicio para manejar la lógica de autenticación
 	Validator   *validator.Validate // Validador para verificar los datos de entrada
 }
 
 // NewAuthHandler crea una nueva instancia de AuthHandler.
-func NewAuthHandler(authService ports.AuthService) (*AuthHandler, error) {
-	return &AuthHandler{
+func NewAuthHandler(authService ports.AuthService) (*authHandler, error) {
+	return &authHandler{
 		AuthService: authService,
 		Validator:   validator.New(), // Inicializa el validador
 	}, nil
 }
 
 // Register maneja las solicitudes de registro de nuevos usuarios.
-func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
+func (a *authHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var userBody dtos.AuthRegisterDOT
 
 	// Decodificar el cuerpo de la solicitud JSON en la estructura AuthRegisterDOT
@@ -54,7 +54,7 @@ func (a *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 // Login maneja las solicitudes de inicio de sesión de los usuarios.
-func (a *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (a *authHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var userBody dtos.AuthLoginDOT
 
 	// Decodificar el cuerpo de la solicitud JSON en la estructura AuthLoginDOT
