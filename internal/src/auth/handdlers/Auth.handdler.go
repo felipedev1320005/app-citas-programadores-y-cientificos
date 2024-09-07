@@ -7,6 +7,8 @@ import (
 	"go-rest/internal/src/auth/ports"
 	"net/http"
 
+	UserEntity "go-rest/internal/src/users/domain"
+
 	"github.com/go-playground/validator/v10" // Paquete para validación de datos
 )
 
@@ -21,6 +23,7 @@ func NewAuthHandler(authService ports.AuthService, userService ports.UserService
 	return &authHandler{
 		AuthService: authService,
 		Validator:   validator.New(), // Inicializa el validador
+		UserService: userService,
 	}, nil
 }
 
@@ -41,9 +44,18 @@ func (a *authHandler) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
+	newUser := UserEntity.UserCreateDTO{
+		Name:     userBody.Name,
+		Email:    userBody.Email,
+		Password: userBody.Password,
+	}
+	UserCreate, err := a.UserService.CreateUser(newUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	token, err := a.AuthService.GenerateTokenFromUser(UserCreate)
 	// Registrar el nuevo usuario y generar un JWT
-	token, err := a.AuthService.Register(userBody)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -74,11 +86,22 @@ func (a *authHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Iniciar sesión del usuario y generar un JWT
-	token, err := a.AuthService.Login(userBody)
+	user, err := a.UserService.GetUserByEmail(userBody.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode("Invalid credentials")
+		return
+	}
+	err = a.UserService.ComparePasswords(user.Password, userBody.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode("Invalid credentials")
+		return
+	}
+	token, err := a.AuthService.GenerateTokenFromUser(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode("Internal Server Error")
 		return
 	}
 
