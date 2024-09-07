@@ -10,20 +10,20 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type UserHandler struct {
+type userHandler struct {
 	UserService ports.UserService
 	Validator   *validator.Validate
 }
 
 // NewUserHandler es el constructor que inicializa UserHandler con el validador.
-func NewUserHandler(userService ports.UserService) *UserHandler {
-	return &UserHandler{
+func NewUserHandler(userService ports.UserService) *userHandler {
+	return &userHandler{
 		UserService: userService,
 		Validator:   validator.New(), // Inicializa el validador aquí
 	}
 }
 
-func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (u *userHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var userBody domain.UserCreateDTO
 
 	err := json.NewDecoder(r.Body).Decode(&userBody)
@@ -51,7 +51,7 @@ func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newUser)
 }
 
-func (u *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+func (u *userHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := u.UserService.GetUsers()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
