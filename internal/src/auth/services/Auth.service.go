@@ -77,3 +77,25 @@ func (a *AuthService) VerifyToken(tokenString string) (*jwt.Token, error) {
 
 	return token, nil
 }
+func (a *AuthService) GenerateTokenFromUser(user UserEntity.User) (string, error) {
+	token, err := generateToken(user)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+func (a *AuthService) GetUserIDFromToken(tokenString string) (string, error) {
+	token, err := a.VerifyToken(tokenString)
+	if err != nil {
+		return "", err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", jwt.ErrInvalidKey
+	}
+
+	userID := claims["id"].(string)
+	return userID, nil
+}
