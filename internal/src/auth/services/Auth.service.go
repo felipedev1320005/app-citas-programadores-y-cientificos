@@ -58,3 +58,22 @@ func generateToken(user UserEntity.User) (string, error) {
 
 	return signedToken, nil
 }
+
+func (a *AuthService) VerifyToken(tokenString string) (*jwt.Token, error) {
+	var secretKey = "your_secret_key"
+
+	// Parse el token JWT
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Verifica el método de firma del token
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrSignatureInvalid // Cambié esto para devolver un error específico
+		}
+		return []byte(secretKey), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return token, nil
+}
