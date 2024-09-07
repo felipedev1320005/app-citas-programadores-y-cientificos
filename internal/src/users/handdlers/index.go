@@ -9,7 +9,7 @@ import (
 )
 
 type UserHandler struct {
-	UserRepository ports.UserRepository
+	UserService ports.UserService
 }
 
 func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +20,7 @@ func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err.Error())
 		return
 	}
-	newUser, err := u.UserRepository.CreateUser(userBody)
+	newUser, err := u.UserService.CreateUser(userBody)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(err.Error())
@@ -31,7 +31,7 @@ func (u *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	user, err := u.UserRepository.GetUsers()
+	user, err := u.UserService.GetUsers()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(err.Error())

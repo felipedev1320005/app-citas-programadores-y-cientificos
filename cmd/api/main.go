@@ -21,9 +21,9 @@ func main() {
 	dbConection.Conection()
 	// Crear el router de Gorilla Mux
 	r := mux.NewRouter()
-	UserServices := services.UserService{}
-	UserRepo := repo.UserRepository{UserService: &UserServices}
-	UserHandler := handdlers.UserHandler{UserRepository: &UserRepo}
+	UserRepo := repo.UserRepository{}
+	UserServices := services.UserService{UserRepo: &UserRepo}
+	UserHandler := handdlers.UserHandler{UserService: &UserServices}
 	// Definir las rutas
 	r.HandleFunc("/", HomeHandler).Methods("GET")
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")

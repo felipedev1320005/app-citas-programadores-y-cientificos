@@ -2,31 +2,25 @@
 package services
 
 import (
-	"go-rest/internal/src/shared/repositoryConection/posgress"
 	"go-rest/internal/src/users/domain"
+	"go-rest/internal/src/users/ports"
 )
 
-type UserService struct{}
+type UserService struct {
+	UserRepo ports.UserRepository
+}
 
 func (u *UserService) CreateUser(user domain.UserCreateDTO) (domain.User, error) {
-	newUser := domain.User{
-		Name:     user.Name,
-		Email:    user.Email,
-		Password: user.Password,
-	}
-	createUser := posgress.Db.Create(&newUser)
-	err := createUser.Error
+	newUser, err := u.UserRepo.CreateUser(user)
 	if err != nil {
 		return domain.User{}, err
 	}
 	return newUser, nil
 }
 func (u *UserService) GetUsers() ([]domain.User, error) {
-	var users []domain.User
-	getUsers := posgress.Db.Find(&users)
-	err := getUsers.Error
+	user, err := u.UserRepo.GetUsers()
 	if err != nil {
 		return []domain.User{}, err
 	}
-	return users, nil
+	return user, nil
 }
