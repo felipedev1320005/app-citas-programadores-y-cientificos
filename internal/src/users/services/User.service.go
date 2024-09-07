@@ -5,6 +5,8 @@ import (
 	"go-rest/internal/src/users/domain"
 	"go-rest/internal/src/users/ports"
 	"go-rest/internal/src/users/repo"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -36,4 +38,11 @@ func (u *UserService) GetUserByEmail(email string) (domain.User, error) {
 		return domain.User{}, err
 	}
 	return user, nil
+}
+func (u *UserService) ComparePasswords(hashedPassword string, password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	if err != nil {
+		return err
+	}
+	return nil
 }
