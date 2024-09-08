@@ -1,4 +1,4 @@
-package adapters
+package internals
 
 import (
 	"go-rest/internal/src/users/domain"
