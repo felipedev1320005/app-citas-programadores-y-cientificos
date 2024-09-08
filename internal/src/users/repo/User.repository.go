@@ -70,3 +70,15 @@ func (u *UserRepository) GetUserByID(id string) (domain.User, error) {
 	}
 	return user, nil
 }
+func (u *UserRepository) UpdateUserByID(id string, user domain.UserUpdateDTO) (domain.UserResponseDTO, error) {
+	updateUser := posgress.Db.Model(&domain.User{}).Where("id = ?", id).Updates(user)
+	err := updateUser.Error
+	if err != nil {
+		return domain.UserResponseDTO{}, err
+	}
+	userDto := domain.UserResponseDTO{
+		Name:  user.Name,
+		Email: user.Email,
+	}
+	return userDto, nil
+}

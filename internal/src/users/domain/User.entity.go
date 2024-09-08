@@ -28,7 +28,6 @@ type UserUpdateDTO struct {
 	Password string `json:"password"`
 }
 type UserResponseDTO struct {
-	ID          uuid.UUID    `json:"id"`
 	Name        string       `json:"name"`
 	Email       string       `json:"email"`
 	Profile     *Profile     `json:"profile"`

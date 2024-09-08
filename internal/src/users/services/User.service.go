@@ -62,7 +62,6 @@ func (u *UserService) DeleteUserByID(id string) error {
 }
 func (u *UserService) FormateUser(user domain.User) domain.UserResponseDTO {
 	return domain.UserResponseDTO{
-		ID:          user.ID,
 		Name:        user.Name,
 		Email:       user.Email,
 		Profile:     user.Profile,
@@ -73,7 +72,6 @@ func (u *UserService) FormateUsers(users []domain.User) []domain.UserResponseDTO
 	var response []domain.UserResponseDTO
 	for _, user := range users {
 		response = append(response, domain.UserResponseDTO{
-			ID:          user.ID,
 			Name:        user.Name,
 			Email:       user.Email,
 			Profile:     user.Profile,
