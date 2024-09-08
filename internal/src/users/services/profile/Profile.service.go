@@ -1,11 +1,13 @@
 package profile
 
-import "go-rest/internal/src/users/ports"
+import (
+	"go-rest/internal/src/users/ports/profile"
+)
 
 type profileService struct {
-	profileRepo ports.ProfileRepository
+	profileRepo profile.ProfileRepository
 }
 
-func NewProfileService(profileRepo ports.ProfileRepository) *profileService {
+func NewProfileService(profileRepo profile.ProfileRepository) *profileService {
 	return &profileService{profileRepo: profileRepo}
 }

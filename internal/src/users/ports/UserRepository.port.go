@@ -11,6 +11,3 @@ type UserRepository interface {
 	GetUserByID(id string) (domain.User, error)
 	UpdateUserByID(id string, user domain.UserUpdateDTO) (domain.UserResponseDTO, error)
 }
-type ProfileRepository interface {
-	CreateProfile(profile domain.ProfileCreateDTO) (domain.ProfileResponseDTO, error)
-}
