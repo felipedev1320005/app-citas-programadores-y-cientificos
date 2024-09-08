@@ -4,18 +4,20 @@ package services
 import (
 	"go-rest/internal/src/users/domain"
 	"go-rest/internal/src/users/ports"
-	"go-rest/internal/src/users/repo"
+	"go-rest/internal/src/users/ports/profile"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
-	UserRepo ports.UserRepository
+	UserRepo       ports.UserRepository
+	profileService profile.ProfileToUserAdapter
 }
 
-func NewUserService() *UserService {
+func NewUserService(userRepo ports.UserRepository, profileService profile.ProfileToUserAdapter) *UserService {
 	return &UserService{
-		UserRepo: repo.NewUserRepository(),
+		UserRepo:       userRepo,
+		profileService: profileService,
 	}
 }
 func (u *UserService) CreateUser(user domain.UserCreateDTO) (domain.User, error) {

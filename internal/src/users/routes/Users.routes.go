@@ -1,6 +1,7 @@
 package routes
 
 import (
+	Adatapters "go-rest/internal/src/users/adapters"
 	handlers "go-rest/internal/src/users/handdlers"
 	"go-rest/internal/src/users/repo"
 	ProfileRepo "go-rest/internal/src/users/repo/profile"
@@ -15,10 +16,10 @@ func NewRouter() *mux.Router {
 
 	// Inicializar repositorio, servicio y handler
 	UserRepo := repo.UserRepository{}
-	UserServices := services.UserService{UserRepo: &UserRepo}
+	UserServices := services.NewUserService(&UserRepo, Adatapters.NewProfileToUserAdapter(ProfileService.NewProfileService(ProfileRepo.NewProfileRepository())))
 	ProfileRepo := ProfileRepo.NewProfileRepository()
 	ProfileSerivce := ProfileService.NewProfileService(ProfileRepo)
-	UserHandler := handlers.NewUserHandler(&UserServices, ProfileSerivce)
+	UserHandler := handlers.NewUserHandler(UserServices, ProfileSerivce)
 	// Definir rutas
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
 	r.HandleFunc("/users/{id}", UserHandler.GetUserByID).Methods("GET")

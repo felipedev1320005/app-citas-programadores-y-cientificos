@@ -3,7 +3,10 @@ package adapters
 import (
 	"go-rest/internal/src/users/domain"
 	"go-rest/internal/src/users/ports"
+	UserRepo "go-rest/internal/src/users/repo"
+	ProfileRepo "go-rest/internal/src/users/repo/profile"
 	"go-rest/internal/src/users/services"
+	ProfileService "go-rest/internal/src/users/services/profile"
 )
 
 type authAdapter struct {
@@ -11,7 +14,7 @@ type authAdapter struct {
 }
 
 func NewAuthAdapter() *authAdapter {
-	return &authAdapter{userService: services.NewUserService()}
+	return &authAdapter{userService: services.NewUserService(UserRepo.NewUserRepository(), NewProfileToUserAdapter(ProfileService.NewProfileService(ProfileRepo.NewProfileRepository())))}
 }
 
 func (a *authAdapter) CreateUser(user domain.UserCreateDTO) (domain.User, error) {
