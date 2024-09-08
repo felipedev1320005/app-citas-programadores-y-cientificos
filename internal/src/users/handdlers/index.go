@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"go-rest/internal/src/users/domain"
 	"go-rest/internal/src/users/ports"
+	PortProfile "go-rest/internal/src/users/ports/profile"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -12,12 +13,13 @@ import (
 )
 
 type userHandler struct {
-	UserService ports.UserService
-	Validator   *validator.Validate
+	UserService    ports.UserService
+	Validator      *validator.Validate
+	profileService PortProfile.ProfileService
 }
 
 // NewUserHandler es el constructor que inicializa UserHandler con el validador.
-func NewUserHandler(userService ports.UserService) *userHandler {
+func NewUserHandler(userService ports.UserService, profileService PortProfile.ProfileService) *userHandler {
 	return &userHandler{
 		UserService: userService,
 		Validator:   validator.New(), // Inicializa el validador aquí
