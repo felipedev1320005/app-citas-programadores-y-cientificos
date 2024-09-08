@@ -14,11 +14,13 @@ import (
 func NewRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	// Inicializar repositorio, servicio y handler
-	UserRepo := repo.UserRepository{}
-	UserServices := services.NewUserService(&UserRepo, Adatapters.NewProfileToUserAdapter(ProfileService.NewProfileService(ProfileRepo.NewProfileRepository())))
+	// Repositorios
+	UserRepo := repo.NewUserRepository()
 	ProfileRepo := ProfileRepo.NewProfileRepository()
+	// Servicios
 	ProfileSerivce := ProfileService.NewProfileService(ProfileRepo)
+	ProfileToUserAdapater := Adatapters.NewProfileToUserAdapter(ProfileSerivce) // Adapter para convertir el servicio de perfil en un servicio para usuario
+	UserServices := services.NewUserService(UserRepo, ProfileToUserAdapater)
 	UserHandler := handlers.NewUserHandler(UserServices, ProfileSerivce)
 	// Definir rutas
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
