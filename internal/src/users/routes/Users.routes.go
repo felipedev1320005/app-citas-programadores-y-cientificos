@@ -5,8 +5,8 @@ import (
 	handlers "go-rest/internal/src/users/handdlers"
 	"go-rest/internal/src/users/repo"
 	ProfileRepo "go-rest/internal/src/users/repo/profile"
-	"go-rest/internal/src/users/services"
 	ProfileService "go-rest/internal/src/users/services/profile"
+	UserService "go-rest/internal/src/users/services/users"
 
 	"github.com/gorilla/mux"
 )
@@ -20,7 +20,7 @@ func NewRouter() *mux.Router {
 	// Servicios
 	ProfileSerivce := ProfileService.NewProfileService(ProfileRepo)
 	ProfileToUserAdapater := Adatapters.NewProfileToUserAdapter(ProfileSerivce) // Adapter para convertir el servicio de perfil en un servicio para usuario
-	UserServices := services.NewUserService(UserRepo, ProfileToUserAdapater)
+	UserServices := UserService.NewUserService(UserRepo, ProfileToUserAdapater)
 	UserHandler := handlers.NewUserHandler(UserServices, ProfileSerivce)
 	// Definir rutas
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
