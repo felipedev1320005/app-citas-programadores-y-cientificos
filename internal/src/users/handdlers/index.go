@@ -31,7 +31,7 @@ func (u *userHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(users)
+	json.NewEncoder(w).Encode(u.UserService.FormateUsers(users))
 }
 func (u *userHandler) DeleteUserByID(w http.ResponseWriter, r *http.Request) {
 	// Obtiene el id de la URL
@@ -59,5 +59,5 @@ func (u *userHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(u.UserService.FormateUser(user))
 }

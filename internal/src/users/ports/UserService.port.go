@@ -10,4 +10,6 @@ type UserService interface {
 	ComparePasswords(hashedPassword string, password string) error
 	DeleteUserByID(id string) error
 	GetUserByID(id string) (domain.User, error)
+	FormateUser(user domain.User) domain.UserResponseDTO
+	FormateUsers(users []domain.User) []domain.UserResponseDTO
 }
