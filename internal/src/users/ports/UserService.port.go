@@ -12,4 +12,5 @@ type UserService interface {
 	GetUserByID(id string) (domain.User, error)
 	FormateUser(user domain.User) domain.UserResponseDTO
 	FormateUsers(users []domain.User) []domain.UserResponseDTO
+	UpdateUserByID(id string, user domain.UserUpdateDTO) (domain.UserResponseDTO, error)
 }

@@ -60,6 +60,17 @@ func (u *UserService) DeleteUserByID(id string) error {
 	}
 	return nil
 }
+func (u *UserService) UpdateUserByID(id string, user domain.UserUpdateDTO) (domain.UserResponseDTO, error) {
+	_, err := u.GetUserByID(id)
+	if err != nil {
+		return domain.UserResponseDTO{}, err
+	}
+	updateUser, err := u.UserRepo.UpdateUserByID(id, user)
+	if err != nil {
+		return domain.UserResponseDTO{}, err
+	}
+	return updateUser, nil
+}
 func (u *UserService) FormateUser(user domain.User) domain.UserResponseDTO {
 	return domain.UserResponseDTO{
 		Name:        user.Name,
