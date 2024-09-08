@@ -15,7 +15,7 @@ type Preferences struct {
 	User              User      `gorm:"foreignKey:UserID"`
 }
 type PreferencesCreateDTO struct {
-	UserID            uuid.UUID `json:"userID validate:"required"`
+	UserID            uuid.UUID `json:"userID" validate:"required"`
 	ReceiveEmails     bool      `json:"receiveEmails"`
 	ShowOnlineStatus  bool      `json:"showOnlineStatus"`
 	PreferredLanguage string    `json:"preferredLanguage" validate:"required"`
@@ -26,8 +26,8 @@ type PreferencesUpdateDTO struct {
 	PreferredLanguage string `json:"preferredLanguage"`
 }
 type PreferencesResponseDTO struct {
-	ReceiveEmails     bool   `json:"receiveEmails"`
-	ShowOnlineStatus  bool   `json:"showOnlineStatus"`
-	PreferredLanguage string `json:"preferredLanguage"`
-	UserID            uuid.UUID
+	ReceiveEmails     bool      `json:"receiveEmails"`
+	ShowOnlineStatus  bool      `json:"showOnlineStatus"`
+	PreferredLanguage string    `json:"preferredLanguage"`
+	UserID            uuid.UUID `json:"userID"`
 }
