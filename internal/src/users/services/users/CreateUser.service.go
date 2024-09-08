@@ -7,5 +7,11 @@ func (u *UserService) CreateUser(user domain.UserCreateDTO) (domain.User, error)
 	if err != nil {
 		return domain.User{}, err
 	}
+	u.profileService.CreateProfile(domain.ProfileCreateDTO{
+		UserID:      newUser.ID,
+		Bio:         "",
+		AvatarURL:   "",
+		DateOfBirth: "",
+	})
 	return newUser, nil
 }
