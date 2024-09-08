@@ -39,6 +39,13 @@ func (u *UserService) GetUserByEmail(email string) (domain.User, error) {
 	}
 	return user, nil
 }
+func (u *UserService) GetUserByID(id string) (domain.User, error) {
+	user, err := u.UserRepo.GetUserByID(id)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
+}
 func (u *UserService) ComparePasswords(hashedPassword string, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {

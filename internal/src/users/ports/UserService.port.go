@@ -9,4 +9,5 @@ type UserService interface {
 	GetUserByEmail(email string) (domain.User, error)
 	ComparePasswords(hashedPassword string, password string) error
 	DeleteUserByID(id string) error
+	GetUserByID(id string) (domain.User, error)
 }

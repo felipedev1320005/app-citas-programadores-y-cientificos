@@ -18,6 +18,7 @@ func NewRouter() *mux.Router {
 
 	// Definir rutas
 	r.HandleFunc("/users", UserHandler.GetUsers).Methods("GET")
+	r.HandleFunc("/users/{id}", UserHandler.GetUserByID).Methods("GET")
 	r.HandleFunc("/users/{id}", UserHandler.DeleteUserByID).Methods("DELETE")
 
 	return r
