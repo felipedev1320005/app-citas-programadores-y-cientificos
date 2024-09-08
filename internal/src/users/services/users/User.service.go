@@ -1,3 +1,4 @@
+// /internal/src/users/services/users/User.service.go
 package users
 
 import (
@@ -10,6 +11,7 @@ type UserService struct {
 	profileService profile.ProfileToUserAdapter
 }
 
+// Constructor de UserService, implementa el patron de diseño Singleton y inyección de dependencias
 func NewUserService(userRepo ports.UserRepository, profileService profile.ProfileToUserAdapter) *UserService {
 	return &UserService{
 		UserRepo:       userRepo,

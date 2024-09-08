@@ -1,3 +1,4 @@
+// /internal/src/users/ports/profile/ProfileToUserAdapter.port.go
 package profile
 
 import "go-rest/internal/src/users/domain"

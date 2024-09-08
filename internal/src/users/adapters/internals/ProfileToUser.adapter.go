@@ -1,3 +1,4 @@
+// /internal/src/users/adapters/internals/ProfileToUser.adapter.go
 package internals
 
 import (
