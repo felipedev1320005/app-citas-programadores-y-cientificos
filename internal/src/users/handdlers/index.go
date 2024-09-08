@@ -3,6 +3,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"go-rest/internal/src/users/domain"
 	"go-rest/internal/src/users/ports"
 	"net/http"
 
@@ -60,4 +61,31 @@ func (u *userHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(u.UserService.FormateUser(user))
+}
+func (u *userHandler) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	userUpdate := domain.UserUpdateDTO{}
+	err := json.NewDecoder(r.Body).Decode(&userUpdate)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	err = u.Validator.Struct(userUpdate)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	user, err := u.UserService.UpdateUserByID(id, userUpdate)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(user)
 }
